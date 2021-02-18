@@ -1,6 +1,8 @@
 package edu.human.com.common;
 
 import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.apache.ibatis.session.RowBounds;
@@ -96,5 +98,19 @@ public abstract class EgovComAbstractMapper extends EgovAbstractMapper {
 		RowBounds rowBounds = new RowBounds(offset, pageSize);//(시작인덱스번호,꺼내올 개수)
 		return getSqlSession().selectList(queryId, parameterObject, rowBounds);
 	}
+
+	@Override
+	public <K, V> Map<K, V> selectMap(String queryId, Object parameterObject, String mapKey) {
+		// 공통코드를 위한 맵타입의 반환하는 sqlSession템플릿 사용(아래)
+		return getSqlSession().selectMap(queryId, parameterObject, mapKey);
+	}
+
+	@Override
+	public <K, V> Map<K, V> selectMap(String queryId, String mapKey) {
+		// 그룹코드(키)와 이름(벨류)을 맵자료형으로 반환하는 sqlSession템플릿 사용(아래)
+		return getSqlSession().selectMap(queryId, mapKey);
+	}
+	
+	
 	
 }

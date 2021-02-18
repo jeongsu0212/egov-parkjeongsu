@@ -1,11 +1,13 @@
 package edu.human.com.member.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
 import edu.human.com.common.EgovComAbstractMapper;
 import edu.human.com.member.service.EmployerInfoVO;
+import edu.human.com.util.PageVO;
 
 /**
  * egov에서 DAO는 sqlSession템플릿을 바로접근하지 않고,
@@ -16,8 +18,8 @@ import edu.human.com.member.service.EmployerInfoVO;
 @Repository
 public class MemberDAO extends EgovComAbstractMapper {
 	
-	public List<EmployerInfoVO> selectMember() throws Exception {
-		return selectList("memberMapper.selectMember");
+	public List<EmployerInfoVO> selectMember(PageVO pageVO) throws Exception {
+		return selectList("memberMapper.selectMember", pageVO);
 	}
 	
 	public EmployerInfoVO viewMember(String emplyr_id) throws Exception {
@@ -36,5 +38,15 @@ public class MemberDAO extends EgovComAbstractMapper {
 	
 	public void updateMember(EmployerInfoVO employerInfoVO) throws Exception {
 		update("memberMapper.updateMember", employerInfoVO);
+	}
+	
+	public Map<Object, Object> selectCodeMap(String code_id) throws Exception {
+		System.out.println("디버그2:" + code_id);
+		return selectMap("memberMapper.selectCodeMap",code_id, "CODE");
+	}
+	
+	public Map<Object, Object> selectGroupMap() throws Exception {
+		//memberMapper 쿼리 호출(아래)
+		return selectMap("memberMapper.selectGroupMap","GROUP_ID");
 	}
 }

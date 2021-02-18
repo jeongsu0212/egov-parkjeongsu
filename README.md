@@ -44,15 +44,106 @@
 ---------------------- 작업중 ------------------------------
 - eGovFrame메뉴에서 Start > New TemplateProject 심플홈 템플릿 만들어서 커스터 마이징 작업중.
 ----------------------------------------------------------
+- C언어 이론(구름IDE사용).
+- 안드로이드 스튜디오 4.x 이론(https://slidesplayer.org/slide/14087618/)
 - 파스타클라우드 제일 마직막 달에 2주 기간중 배포(클라우드용-mysql을사용)
 - IoT(아두이노,노드MCU보드로 실습-C언어책3권) 2주
 - 안드로이드앱(클라이언트)-통신-자바:스프링웹프로젝트(API서버) 2주
 - -----------------------------------------------------
+#### 20210217(수) 작업예정.
+- egov프로젝트 관리자관리 CRUD 마무리.
+- egov프로젝트 관리자관리 검색 및 페이징 처리 추가.
+- egov게시물관리 CRUD 처리(관리자관리처럼 마이바티스이용않하고) ibatis(기존클래스이용)적용.
+- egov게시물관리는 컨트롤러와 JSP단만 처리합니다.(AdminLTE)
+- 사용자단 메인페이지 UI 변경예정(타일즈템플릿-벨로서티템플릿 jsp UI템플릿을 사용) tiles템플릿을 사용예정.
+- 차투리시간에 C언어 계속진행.
+
+#### 20210216(화) 작업.
+- 이클립스 빌드 속도 때문에 window메뉴->preference->validation검색->build탭의 체크모두해제 시킴->OK.
+- web패키지(컨트롤러) 작업 + AdminLTE로 뷰jsp단 작업.(마이바티스기반-새로만들기)
+- jsp단의 root(최상위)경로를 html태그의 / 에서 <c:url value='/' /> 로 변경했음.
+- /admin/home.do URL액션을 주는 설정(web.xml) 확인.
+- /admin/**/*.do URL액션에 로그인체크권한설정추가(egov-com-servlet.xml).
+- 결과는 사용자(기존)과 관리자단을 분리했습니다.
+- 관리자단 home.jsp > header, footer 로 분리.
+- 코드 인스펙션(소스 분석): egov프로젝트의 진입점(webapp/index.jsp) 확인.
+- egov프로젝트의 jsp(동적페이지)폴더에 html(정적페이지)를 jsp로 변환해서 배치합니다.
+- 공통코드(기본코드) 테이블 이용에 대한 개념이 있어야 합니다. 오늘은 여기까지
+
+```
+-- Mysql 데이터베이스에서 CODE테이블의 코드명 가져오는 함수 만들기 (아래)
+CREATE FUNCTION FN_CODE_NM (
+P_CODE_ID VARCHAR(255),
+P_CODE VARCHAR(255)
+)
+RETURNS VARCHAR(255)
+BEGIN
+DECLARE RETURN_VAR VARCHAR(255);
+SELECT CODE_NM INTO RETURN_VAR
+FROM lettccmmndetailcode 
+WHERE 
+CODE_ID = P_CODE_ID AND CODE = P_CODE;
+RETURN RETURN_VAR;
+END
+
+CREATE FUNCTION FN_GROUP_NM(P_GROUP_ID VARCHAR(255)
+) RETURNS varchar(255) CHARSET utf8
+BEGIN
+DECLARE RETURN_VAR VARCHAR(255);
+SELECT GROUP_NM INTO RETURN_VAR
+FROM lettnauthorgroupinfo
+WHERE 
+GROUP_ID = P_GROUP_ID;
+RETURN RETURN_VAR;
+END
+```
+- 게시판관리 부분도 작업: 아이바티스기반(기존egov것)으로 작업(컨트롤러+jsp뷰단만 작업).
+- 오후에 키보드로 입력받은 1개문자를  아스키코드로 변환하는 C프로그램을 작성할 예정.
+
+```
+/********************************************************
+ 구현내용: 키보드로부터 한 문자를 입력 받아서 입력 
+          문자에 해당하는 아스키 코드값을 출력하세요.
+ 작성자 : 김일국
+ 작성일 : 2011.06.29
+ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ 출력:  문자 입력 : A
+        값 : 65
+ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+*********************************************************/
+#include <stdio.h>
+void main()
+{
+    printf("키보드로 입력받은 문자를 아스키코드로 변환해서 출력하기\n");
+    printf("프로그램을 종료하려면 Ctrl+C를 하세요\n");
+    char cNum;
+    while (1)
+    {
+        printf("문자 입력 : ");
+        scanf("%c", &cNum);       //char형으로 문자입력
+        getchar();                //입력 후 엔터 키를 공백으로 처리
+        printf("-사람의 문자값:%c\n-컴퓨터의 아스키코드값:%d\n", cNum, cNum);  //int형 %d로 출력   
+    }
+}
+```
+- C언어 기초: 5장확인 후 6장 시작예정.
+
 #### 20210215(월) 작업.
+- 참조: https://ko.wikipedia.org/wiki/ASCII 여기에서 모양(사람)=십진법(컴퓨터가이해)
+- 아스키코드? 사람이 이해하는 문자!=컴퓨터가 이해하는 문자가 다르기 때문에 만들어진 문자가 아스키코드
+- 아스키코드예1: a(사람)=97(컴퓨터), b(사람)=98(아스키코드), C언어에서는 값비교시 아스키사용
+- 아스키코드예2: 0(사람)=48(컴퓨터), 1(온도/습도)=49(아스키코드):
+- row(레코드)데이터, raw(가공전 원시)데이터-빅데이터과목에서
 - egov 프로젝트 생성시 심플홈템플릿 프로젝트는 관리자관리 기능이 없음.
-- 관리자관리기능 추가시 edu.~ 패키지를 생성해서 ,관리자관리 기능을 만드는중.
-- JUnit으로 관리자관리기능의 CRUD테스트를 시작하려고함.
-- 
+- 관리자관리기능 추가시 edu.~ 패키지를 생성해서, 관리자관리 기능을 만드는 중.
+- JUnit으로 관리자관리기능의  CRUD테스트를 시작하려고 합니다.
+- VO-매퍼쿼리-DAO-Service-JUnit 구조로 Select까지 해 봤습니다.
+- JUnit CRUD까지 한 이 후 OK.-------------------------------
+- C언어 기초: 5장 까지OK.
+- 컨트롤러 + web패키지 작업 + AdminLTE로 뷰jsp단 작업.(마이바티스기반-새로만들기)
+- 게시판관리 부분도 작업: 아이바티스기반(기존egov것)으로 작업(컨트롤러+jsp뷰단만 작업).
+- egov 패키지구조1: 서비스패키지(VO포함,인터페이스) 
+- egov 패키지구조2: 서비스임플리먼트패키지(서비스클래스,DAO클래스)
 
 #### 20210210(수) 작업.
 - 사전지식: egov 프로젝트의 기본은 iBatis -> myBatis 변경해서 커스터마이징.
@@ -72,4 +163,3 @@
 - member 컨트롤러 만들기 어것을 먼저 아니면, 아래 AdminLTE 화면부터 시작하던지 선택.
 - AdminLTE 템플릿을 egov프로젝트에 붙여 넣기(resources폴더에)
 - AdminLTE 관리자관리기능 추가.(로그인체크에 결리게 egov-com-servlet.xml의 인터셉터에 경로추가)
-- C언어 기초: 3장 입출력함수와 연산자 시작예정.

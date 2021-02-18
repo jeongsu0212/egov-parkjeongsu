@@ -37,7 +37,6 @@ public class EmployerInfoVO {
 	private String CRTFC_DN_VALUE;
 	private Date SBSCRB_DE;
 	
-	
 	@Override
 	public String toString() {
 		return "EmployerInfoVO [EMPLYR_ID=" + EMPLYR_ID + ", ORGNZT_ID=" + ORGNZT_ID + ", USER_NM=" + USER_NM
@@ -86,7 +85,6 @@ public class EmployerInfoVO {
 	public void setIHIDNUM(String iHIDNUM) {
 		IHIDNUM = iHIDNUM;
 	}
-
 	public String getBRTHDY() {
 		return BRTHDY;
 	}
