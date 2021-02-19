@@ -99,10 +99,9 @@
                   	<label for="GROUP_ID">GROUP_ID</label>
                   	<select class="form-control" name="GROUP_ID" id="GROUP_ID">
                   		<c:forEach items="${codeGroup}" var="sub">
-                  			<option value="${sub.value.GROUP_ID}" <c:out value="${(memberVO.GROUP_ID==sub.value.GROUP_ID)?'selected':''}" />>${sub.value.GROUP_NM}</option>
+                  			<option value="${sub.value.GROUP_ID}" <c:out value="${(memberVO.GROUP_ID==sub.value.GROUP_ID)?'selected':''}" /> >${sub.value.GROUP_NM}</option>
                   		</c:forEach>
-                  	</select>
-                  		
+                  	</select>                  		
                   </div>
                   <div class="form-group">
                   	<label for="ESNTL_ID">ESNTL_ID</label>
@@ -115,9 +114,9 @@
           
           <!-- 버튼영역 시작 -->
             <div class="card-body">
-            	<a href="<c:url value='/admin/member/list_member.do' />" class="btn btn-primary float-right mr-1">목록</a>
-              	<button type="submit" class="btn btn-info float-right mr-1">수정</button> 
-              	<button id="btn_delete" type="button" class="btn btn-danger float-right mr-1">삭제</button>             	
+            	<a href="<c:url value='/admin/member/list_member.do?page=${pageVO.page}&search_type=${pageVO.search_type}&search_keyword=${pageVO.search_keyword}' />" class="btn btn-primary float-right mr-1">목록</a>
+              	<button type="submit" class="btn btn-info float-right mr-1">수정</button>
+              	<button id="btn_delete" type="button" class="btn btn-danger float-right mr-1">삭제</button>            	
               	<!-- a태그는 링크이동은 되지만, post값을 전송하지는 못합니다. 그래서, button태그를 사용. -->
             </div>
           <!-- 버튼영역 끝 -->
@@ -138,7 +137,7 @@
 <script>
 $(document).ready(function(){
 	$("#btn_delete").on("click",function(){
-		if(confirm("정말로 삭제하시겠습니까?")) {
+		if(confirm("정말로 삭제 하시겠습니까?")) {
 			var delete_form = $("form[name='write_form']");
 			delete_form.attr("action","<c:url value='/admin/member/delete_member.do' />");
 			delete_form.submit();
