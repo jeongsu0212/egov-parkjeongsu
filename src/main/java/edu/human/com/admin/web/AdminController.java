@@ -15,10 +15,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.human.com.board.service.BoardService;
 import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
+import edu.human.com.util.CommonUtil;
 import edu.human.com.util.PageVO;
 import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.EgovFileMngService;
+import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.BoardVO;
@@ -33,6 +37,10 @@ public class AdminController {
 	
 	@Inject
 	private MemberService memberService;
+	@Inject
+	private CommonUtil commUtil;
+	@Inject
+	private BoardService boardService;
 	//스프링빈(new키워드만드는 오브젝트X) 오브젝트를 사용하는 방법 @Inject(자바8이상), @Autowired(많이사용), @Resource(자바7이하)
 	@Autowired
 	private EgovBBSAttributeManageService bbsAttrbService;
@@ -40,7 +48,20 @@ public class AdminController {
 	private EgovPropertyService propertyService;
 	@Autowired
 	private EgovBBSManageService bbsMngService;
+	@Autowired
+	private EgovFileMngService fileMngService;
 	
+	@RequestMapping("/admin/board/delete_board.do")
+	public String delete_board(BoardVO boardVO, RedirectAttributes rdat) throws Exception {
+		FileVO fileVO = new FileVO();
+		if(boardVO.getAtchFileId()!=null || !"".equals(boardVO.getAtchFileId()) ) {
+			fileVO.setAtchFileId(boardVO.getAtchFileId());
+			fileMngService.deleteAllFileInf(fileVO);
+		}
+		boardService.delete_board((int)boardVO.getNttId());
+		rdat.addFlashAttribute("msg", "삭제");
+		return "redirect:/admin/board/list_board.do?bbsId="+boardVO.getBbsId();
+	}
 	@RequestMapping("/admin/board/view_board.do")
 	public String view_board(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
 		LoginVO user = new LoginVO();
@@ -61,9 +82,14 @@ public class AdminController {
 
 		boardVO.setLastUpdusrId(user.getUniqId());
 		BoardVO vo = bbsMngService.selectBoardArticle(boardVO);
-
+		//시큐어코딩 시작(게시물내용에서 자바스크립트 코드 제거)
+		//egov 저장할떄, 시큐어코딩으로 저장하는 방식을 사용, 문제있음. 우리방식으로 변경
+		String subject = commUtil.unscript(vo.getNttSj());//게시물제목
+		String content = commUtil.unscript(vo.getNttCn());//게시물내용
+		vo.setNttSj(subject);
+		vo.setNttCn(content);
 		model.addAttribute("result", vo);
-
+		
 		model.addAttribute("sessionUniqId", user.getUniqId());
 
 		//----------------------------
@@ -86,7 +112,9 @@ public class AdminController {
 	@RequestMapping("/admin/board/list_board.do")
 	public String list_board(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-
+		if(boardVO.getBbsId() == null) {
+			boardVO.setBbsId("");
+		}
 		boardVO.setBbsId(boardVO.getBbsId());
 		boardVO.setBbsNm(boardVO.getBbsNm());
 
