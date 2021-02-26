@@ -3,7 +3,7 @@
 <%@ taglib uri="http://egovframework.gov/ctl/ui" prefix="ui" %>
 <%@ include file="../include/header.jsp" %>
 
- <!-- 대시보드 본문 Content Wrapper. Contains page content -->
+<!-- 대시보드 본문 Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- 본문헤더 Content Header (Page header) -->
     <div class="content-header">
@@ -35,7 +35,7 @@
 
                 <div class="card-tools">
                   
-                  <form name="search_form" action="<c:url value='/admin/board/list_board.do' />"  method="get">
+                  <form name="search_form" action="<c:url value='/admin/board/list_board.do' />" method="get">
                   	<input type="hidden" name="bbsId" value="<c:out value='${boardVO.bbsId}'/>" />
 					<input type="hidden" name="nttId"  value="0" />
 					<input type="hidden" name="bbsTyCode" value="<c:out value='${brdMstrVO.bbsTyCode}'/>" />
@@ -47,8 +47,8 @@
                     <div>
                         <select name="searchCnd" class="form-control">
                             <option value="0" <c:if test="${searchVO.searchCnd == '0'}">selected="selected"</c:if> >제목</option>
-				            <option value="1" <c:out value="${(searchVO.searchCnd=='1')?'selected':''}" /> >내용</option>             
-				            <option value="2" <c:if test="${searchVO.searchCnd == '2'}">selected="selected"</c:if> >작성자</option>
+							<option value="1" <c:out value="${(searchVO.searchCnd=='1')?'selected':'' }" /> >내용</option>             
+							<option value="2" <c:if test="${searchVO.searchCnd == '2'}">selected="selected"</c:if> >작성자</option>            
                         </select>
                     </div>
                     <div>
@@ -77,15 +77,19 @@
                     </tr>
                   </thead>
                   <tbody>
+                  <c:if test="${fn:length(resultList) == 0}">
+                  	<tr><td class="text-center" colspan="5">조회된 값이 없습니다.</td></tr>
+                  </c:if>
                   <c:forEach items="${resultList}" var="result" varStatus="status">
                     <tr>
-                      <td><!-- 공지사항전체게시물수5 + 1-((현재페이지번호1-1)* 전체페이지크기1) + forEach인덱스2 -->
-                      <!-- 결과 5,4,3,2,1 -->
-                      <c:out value="${paginationInfo.totalRecordCount+1-((searchVO.pageIndex-1)*searchVO.pageSize + status.count)}"/>
+                      <td>
+                      <!-- 공지사항전체게시물수20 + 1-((현재페이지번호2-1)*페이지당보여줄개수10)+forEach인덱스1 -->
+                      <!-- 20~11 이전1페이지 > 이후2페이지 결과 10부터 -->
+                      <c:out value="${paginationInfo.totalRecordCount+1-((searchVO.pageIndex-1)*searchVO.pageSize+status.count)}"/>
                       </td>
                       <td>
-                      <form name="view_form" action="<c:url value='/admin/board/view_board.do' />">
-                      <!-- 답글일경우 계단식표시 추가 -->
+                      <form name="view_form" action="<c:url value='/admin/board/view_board.do' />" method="post">
+                      <!-- 답글일경우 계단식표시 추가(아래) -->
                       <c:if test="${result.replyLc!=0}">
 		                <c:forEach begin="0" end="${result.replyLc}" step="1">
 		                    &nbsp;<!-- 들여쓰기 역할하는 스페이스바 특수문자 -->
@@ -117,7 +121,7 @@
             
             <!-- 버튼영역 시작 -->
               <div class="card-body">
-              	<a href="<c:url value='/admin/board/insert_board.do' />" class="btn btn-primary float-right">글작성</a>
+              	<a href="<c:url value='/admin/board/insert_board_form.do?bbsId=${boardVO.bbsId}' />" class="btn btn-primary float-right">글작성</a>
               	<!-- 부트스트랩 디자인 버튼클래스를 이용해서 a태그를 버튼모양 만들기(위) -->
               	<!-- btn클래스명이 버튼모양으로 변경, btn-primary클래스명은 버튼색상을 변경하는역할 -->
               	<!-- 
@@ -133,11 +137,10 @@
             <!-- 페이징처리 시작 -->
             <div class="pagination justify-content-center">
             	<ul class="pagination">
-            		<ui:pagination paginationInfo="${paginationInfo}" type="image" jsFunction="fn_egov_select_noticeList" />
-            	</ul>
+            	 <ui:pagination paginationInfo="${paginationInfo}" type="image" jsFunction="fn_egov_select_noticeList" /> 
+           	    </ul>
             </div>
-	  		<!-- 페이징처리 끝 -->
-	  		
+	  		<!-- 페이징처리 끝 --> 
           </div>
         </div>
         

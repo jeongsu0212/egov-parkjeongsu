@@ -14,8 +14,8 @@
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
     <div class="p-3 control-sidebar-content text-center">
-	    <h5>로그 아웃</h5><hr class="mb-2"/>
-	    <a href="<c:url value='/uat/uia/actionLogout.do' />" class="btn btn-lg btn-primary">로그아웃</a>
+	    <h5>로그아웃</h5><hr class="mb-2"/>
+	    <a href="<c:url value='/logout.do' />" class="btn btn-lg btn-primary">로그아웃</a>
     </div>
     
   </aside>

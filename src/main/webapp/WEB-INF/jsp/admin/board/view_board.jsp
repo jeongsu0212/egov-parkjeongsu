@@ -46,7 +46,7 @@
                 <hr>
                 <strong><i class="fas fa-pencil-alt mr-1"></i> 작성자</strong>
                 <p class="text-muted">
-                ${result.ntcrId}
+                ${result.frstRegisterNm}
                 </p>
                 <c:if test="${not empty result.atchFileId}">
 	                <hr>
@@ -62,10 +62,10 @@
             </div>
           <!-- 버튼영역 시작 -->
           <div class="card-body">
-            	<button id="btn_list" type="button" href="" class="btn btn-primary float-right mr-1">목록</button>
-              	<button id="btn_delete" type="button" class="btn btn-danger float-right mr-1">삭제</button>
-				<button id="btn_update" type="button" class="btn btn-warning float-right mr-1 text-white">수정</button>              	
-              </div>
+            <button id="btn_list" type="button" class="btn btn-primary float-right mr-1">목록</button>
+            <button id="btn_delete" type="button" class="btn btn-danger float-right mr-1">삭제</button>
+			<button id="btn_update" type="button" class="btn btn-warning float-right mr-1 text-white">수정</button>              	
+          </div>
           <!-- 버튼영역 끝 -->
           </div><!-- //col-12 -->
         </div><!-- //row -->
@@ -85,6 +85,8 @@
 	<input type="hidden" name="sortOrdr" value="<c:out value='${result.sortOrdr}'/>" >
 	<input type="hidden" name="replyLc" value="<c:out value='${result.replyLc}'/>" >
 	<input type="hidden" name="nttSj" value="<c:out value='${result.nttSj}'/>" >
+	<input type="hidden" name="atchFileId" value="${result.atchFileId}">
+	<input type="hidden" name="fileSn" value="0">
 </form>
 <script>
 $(document).ready(function(){
@@ -96,10 +98,12 @@ $(document).ready(function(){
 		if(confirm("정말로 삭제하시겠습니까?")){
 			action_form.attr("action","<c:url value='/admin/board/delete_board.do' />");
 			action_form.submit();
-		}
+		}	
 	});
 	$("#btn_update").on("click",function(){
-		alert("준비중.");
+		//alert("준비중 입니다.");
+		action_form.attr("action","<c:url value='/admin/board/update_board_form.do' />");
+		action_form.submit();
 	});
 });
 </script>
