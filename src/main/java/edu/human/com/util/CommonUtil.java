@@ -16,14 +16,11 @@ public class CommonUtil {
 	@Inject
 	private MemberService memberService;
 	
-	//첨부파일 삭제 메서드(아래)
 	
 	
 	/**
-     * XSS 방지 처리. 자바스크립트 코드를 실행하지 못하는 특수문자로 replace(교체)하는내용
-     * 접근권한 protected 현재클래스(패키지)만 이용가능 -> public
-     * @param data 
-     * @return 
+     * 기존 로그인 처리는 egov것 그대로 사용하고,
+     * 단, 로그인 처리 이후 이동할 페이지를 OLD에서 NEW로 변경
      */
     public String unscript(String data) {
         if (data == null || data.trim().equals("")) {
