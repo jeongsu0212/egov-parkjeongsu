@@ -135,11 +135,9 @@
             <!-- 버튼영역 끝 -->
               
             <!-- 페이징처리 시작 -->
-            <div class="pagination justify-content-center">
-            	<ul class="pagination">
-            	 <ui:pagination paginationInfo="${paginationInfo}" type="image" jsFunction="fn_egov_select_noticeList" /> 
-           	    </ul>
-            </div>
+           	<div class="pagination">
+            	 <ui:pagination paginationInfo="${paginationInfo}" type="paging" jsFunction="fn_egov_select_noticeList" /> 
+           	</div>
 	  		<!-- 페이징처리 끝 --> 
           </div>
         </div>

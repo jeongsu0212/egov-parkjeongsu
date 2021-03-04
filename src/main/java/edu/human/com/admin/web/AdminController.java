@@ -364,6 +364,7 @@ public class AdminController {
 		
 		return "admin/board/view_board";
 	}
+	
 	@RequestMapping("/admin/board/list_board.do")
 	public String list_board(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
