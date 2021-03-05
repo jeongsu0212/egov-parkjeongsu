@@ -22,9 +22,9 @@
 <style>
 </style>
 <script>
-$(document).ready(function() {
-	
-});
+if("${msg}" != "") {
+	alert("${msg} 가(이) 성공했습니다.");
+}
 </script>
 </head>
 <body>
