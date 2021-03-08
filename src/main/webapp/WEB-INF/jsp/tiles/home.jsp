@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>	
+<style>
+.img_topplace { opacity:0.7; }
+.img_topplace:hover {/*가상선택자 :, 가성요소 ::*/
+	opacity:1.0;
+}
+</style>
 	<!-- 메인콘텐츠영역 -->
 	<div id="container">
 		<!-- 모바일+PC 공통슬라이드영역 -->
@@ -50,21 +56,32 @@
 		<div class="about_area">
 			<h2>
 			<a href="<c:url value='/tiles/board/list_board.do?bbsId=BBSMSTR_BBBBBBBBBBBB' />">
-			겔러리 최근 게시물 <b>TOP 3</b>
+			갤러리 최근 게시물 <b>TOP 3</b>
 			</a>
 			</h2>
 			<div class="about_box">
 				<ul class="place_list box_inner clear">
 					<c:forEach items="${galleryList}" var="galleryVO">
-					<li>
-					<a href="#">
-							<img class="img_topplace" src="<c:url value='/' />resources/home/img/no_image.png" alt="OOOO OOOOO" style="opacity:0.7;"/>
-							<h3>${galleryVO.nttSj}</h3>
-							<p class="txt">
-							${galleryVO.nttCn}
-							</p>
-							<span class="view">VIEW</span>
-					</a>
+					<li class="view_detail" style="cursor:pointer">
+					<form name="view_form" action="<c:url value='/tiles/board/view_board.do' />" method="post">
+						<c:if test="${empty galleryVO.atchFileId}">
+							<img class="img_topplace" src="<c:url value='/' />resources/home/img/no_image.png" alt="OOOO OOOOO" />
+						</c:if>
+						<c:if test="${not empty galleryVO.atchFileId}">
+							<img class="img_topplace" src="<c:url value='/tiles/board/previewImage.do' />?atchFileId=${galleryVO.atchFileId}" />
+						</c:if>
+						<h3>${galleryVO.nttSj}</h3>
+						<p class="txt">
+						${galleryVO.nttCn}
+						</p>
+						<span class="view">VIEW</span>
+						<input type="hidden" name="bbsId" value="<c:out value='${galleryVO.bbsId}'/>" />
+                        <input type="hidden" name="nttId"  value="<c:out value="${galleryVO.nttId}"/>" />
+                        <input type="hidden" name="bbsTyCode" value="<c:out value='${galleryVO.bbsTyCode}'/>" />
+                        <input type="hidden" name="bbsAttrbCode" value="<c:out value='${galleryVO.bbsAttrbCode}'/>" />
+                        <input type="hidden" name="authFlag" value="<c:out value='Y'/>" />
+                        <input name="pageIndex" type="hidden" value="<c:out value='1'/>"/>
+					</form>
 					</li>
 					</c:forEach>
 				</ul>
@@ -95,3 +112,11 @@
 		<!-- //카카오톡상담및최근공지사항영역 -->
 	</div>
 	<!-- //메이콘텐츠영역 -->
+<script>
+$(document).ready(function(){
+	$(".view_detail").on("click",function(){
+		var select_element = $(this).find("form");
+		select_element.submit();
+	});
+});
+</script>
