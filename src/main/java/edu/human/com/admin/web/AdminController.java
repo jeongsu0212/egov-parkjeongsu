@@ -414,6 +414,7 @@ public class AdminController {
 		////-----------------------------
 
 		model.addAttribute("resultList", map.get("resultList"));
+		System.out.println("디버그2:" + map.get("resultList").toString());
 		model.addAttribute("resultCnt", map.get("resultCnt"));
 		model.addAttribute("boardVO", boardVO);
 		model.addAttribute("brdMstrVO", master);

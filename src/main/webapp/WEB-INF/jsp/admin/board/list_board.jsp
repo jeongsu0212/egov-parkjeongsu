@@ -2,7 +2,12 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://egovframework.gov/ctl/ui" prefix="ui" %>
 <%@ include file="../include/header.jsp" %>
-
+<script>
+function fn_egov_select_noticeList(pageNo) {
+    document.search_form.pageIndex.value = pageNo;
+    document.search_form.submit();  
+}
+</script>
 <!-- 대시보드 본문 Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- 본문헤더 Content Header (Page header) -->
@@ -135,8 +140,8 @@
             <!-- 버튼영역 끝 -->
               
             <!-- 페이징처리 시작 -->
-           	<div class="pagination">
-            	 <ui:pagination paginationInfo="${paginationInfo}" type="paging" jsFunction="fn_egov_select_noticeList" /> 
+           	<div class="pagination justify-content-center">
+            	 <ui:pagination paginationInfo="${paginationInfo}" type="image" jsFunction="fn_egov_select_noticeList" /> 
            	</div>
 	  		<!-- 페이징처리 끝 --> 
           </div>

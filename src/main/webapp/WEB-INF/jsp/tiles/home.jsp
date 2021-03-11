@@ -57,7 +57,7 @@
 		<div class="about_area">
 			<h2>
 			<a href="<c:url value='/tiles/board/list_board.do?bbsId=BBSMSTR_BBBBBBBBBBBB' />">
-			겔러리 최근 게시물 <b>TOP 3</b>
+			갤러리 최근 게시물 <b>TOP 3</b>
 			</a>
 			</h2>
 			<div class="about_box">
