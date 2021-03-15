@@ -41,25 +41,206 @@
 - 오라클로 마이그레이션 작업OK.
 - 웹프로젝트 소스를 스프링프레임워크 버전으로 5.2.5 마이그레이션(버전 업그레이드) 헤로쿠배포OK.
 - 오라클 이론OK.
+- eGovFrame메뉴에서 Start > New TemplateProject 심플홈 템플릿 만들어서 커스터 마이징 작업OK.
+- C언어 이론(구름IDE사용) OK.
 ---------------------- 작업중 ------------------------------
-- eGovFrame메뉴에서 Start > New TemplateProject 심플홈 템플릿 만들어서 커스터 마이징 작업중.
-----------------------------------------------------------
-- C언어 이론(구름IDE사용).
 - 안드로이드 스튜디오 4.x 이론(https://slidesplayer.org/slide/14087618/)
+---------------------------------------------------------- 
+- 혼자공부하는 C언어 책 목차확인 예정(IoT13번과목진행바로전).
 - 파스타클라우드 제일 마직막 달에 2주기간에egov배포(클라우드용-mysql을사용)
 - IoT(아두이노,노드MCU보드로 실습-C언어책3권) 2주
 - 안드로이드앱(클라이언트)-통신-자바:스프링웹프로젝트(API서버) 2주
 - -----------------------------------------------
-#### 20210305(금)
-- 
 
-#### 20210304(목).
-- jsp의 EL(Express 
+#### 20210315(월) 작업예정.
+- 
+- XML화면과 메인액티비티JAVA와 데이터연동 및 화면재생하는 실습예정.
+- egov프로젝트 사용자단에서 회원탈퇴기능 마무리.
+- egov프로젝트 권한 기능 추가(GroupID로 사용자그룹,관리자그룹체크해서 AdminLTE못 들어가게 처리)
+- commonUtil클래스에 관리자 권한 체크하는 메서드 추가(아래)
+
+```
+public Boolean getAuthorities() throws Exception {
+	Boolean authority = Boolean.FALSE;
+	if (EgovObjectUtil.isNull((LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
+		// 로그인세션이 없으면 즉, 로그인 하지 않으면;
+		return authority;
+	}
+	LoginVO sessionLoginVO = (LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
+	EmployerInfoVO memberVO = memberService.viewMember(sessionLoginVO.getId());
+	if("GROUP_00000000000000".equals(memberVO.getGROUP_ID())) { 
+	  authority = Boolean.TRUE;
+	};
+	return authority;
+}
+```
+- admin컨트롤러단 사용자권한 처리 부분 모두 변경(아래)
+
+```
+// new 사용자권한 처리
+   if(!commUtil.getAuthorities()) {
+        model.addAttribute("msg", "관리자로 접근할 수 없습니다. 홈페이지로 돌아가기");
+        return "home.tiles";
+   }
+```
+- 로그인시 세션 처리 commonUtil클래스의 메서드에 아래내용추가 및 jsp수정
+
+```
+EmployerInfoVO memberVO = memberService.viewMember(resultVO.getId());
+if("GROUP_00000000000000".equals(memberVO.getGROUP_ID())) { 
+	request.getSession().setAttribute("ROLE_ADMIN", memberVO.getGROUP_ID());
+};
+//마지막으로 사용자단 header.jsp에 아래내용으로 수정
+<c:if test="${ROLE_ADMIN ne null}">
+	<li><a href="<c:url value='/admin/home.do' />">AdminLTE</a></li>
+/c:if>
+```
+- 아래 2가지는 egov프로젝트 또는 스프링5프로젝트 둘중에서 1가지만 작업예정
+- AdminLTE 관리자단 대시보드에 최신회원등록자5명 및 최신공지사항/겔러리 5개 출력디자인 추가예정.
+- 사용자단 글 수정시 본인 글만 수정가능하게 처리예정.
+
+#### 20210312(금) 작업.
+- 이클립스(큰형), STS, VS code, 안드로이드스튜디오, 인텔리J
+- SQL디벨러퍼(오라클db),워크벤치(Mysql,마리아db),SQLite브라우저
+- https://github.com/miniplugin/SQLite-kimilguk
+- SQLite앱 메인액티비티 자바쪽 작업예정.
+- xml UI단<->SQLite디비생성<->자바 메인액티비티단
+- SQLite생성: DatabaseHelper.java 클래스를 생성OK.
+- SQLite DB는 있으나, DBMS가 없어요(오라클,Mysql) 개발자가 직접코드로  데이터베이스파일을 만듭니다. school.db 데이터베이스명.
+- SQLite데이터베이스 내용확인 툴: https://sqlitebrowser.org/dl/
+- DataBaseTables.java 계약서(Contract)생성.(필드명을 1곳에서 관리)
+- student 테이블 생성. 메인액티비티에서 insert 더미실행OK.
+- 오후 egov프로젝트 사용자단에서 회원 가입/마이페이지 생성하기 예정.
+- egov프로젝트 회원인증OK, 권한체크(사용자그룹,관리자그룹)없음추가예정.
+
+#### 20210311(목) 작업.
+- 안드로이드앱의 라이프사이클(생명주기-윤회)
+- 라이프사이클: 로그인액티비티 기준 상태6가지(아래), 
+- onCreate(생성),onDestroy(소멸),onStart(시작),onStop(정지),onResume(실행),onPause(일시정지)
+- 로그인했을때(현재화면을 벗어날때): onPause(일시정지)->onStop(정지) 
+- 로그인 후 뒤로가기했을때: onStart(시작)->onResume(실행)
+- 로그아웃했을때: onCreate(생성),onStart(시작),onResume(실행)
+- ----------------------------------------------------
+- Oject가 null널인것 과  ""공백인것과는 틀립니다.
+- null 은 객체(메모리할당)가 없습니다. 공백은 객체가 존재함. 
+- view는 제일 상위의 콤포넌트 입니다. 자바의 Object와 동급
+- Object <String, Interger, Double, Class ...>
+- View <Layout, Button, TextView, EditText ...>
+- 로그인액티비티 화면 만들어서 startActive()로 띄우기 OK.
+- 액티비티간 페이지이동시 로그인 아이디/암호 값을 가져가는 연습. 
+- CRUD DB에 입력/수정/삭제/조회 - 스마트폰 내부에 SQLite 데이터베이스사용 CRUD앱 연습예정.
+- 리사이클러 뷰(recycler view) 콤포넌트사용.
+- 신규 앱 프로젝트 깃과 연동시키기(VCS메뉴사용:Version Controller System)
+- egov프로젝트 사용자단에서 회원 가입/마이페이지 생성하기 예정.
+
+#### 20210310(수) 작업.
+- 요구사항확인 과제물 리뷰OK.
+- 스프링프레임워크로 납품하는것은 개인개발자의 역량이 아니고, 스프링프레임워크의 기술이 보증되기 때문에 가능합니다.
+- V11.0.0 애플리케이션 설계 과목 시험준비시간(3교시)OK.
+- 폰갭(PhoneGap) 유틸리티: 모바일웹페이지(스프링) 웹톰캣에배포 .war(웹 아카이브)파일->모바일앱변환시킴 구글 플레이스토어에 배포가능 .apk(안드로이드 패키징)파일로 만들어줌(하이브리드앱).
+- 안드로이드 스튜디오 4.x 이론 PPT 2부터 예정.
+- 안드로이드 앱의 구조:파일기준(스프링프로젝트와 비교 아래)
+- pom.xml = build.gradle(app폴더내)
+- servlet-context.xml = AndroidManifest.xml
+- 특1, values폴더 = AndroidManifest에서 사용가능한 변수값이 지정된 파일들
+- 특2, 화면의 이미지가 1개가 아니고, 2개이상일때, xml로 구성합니다.
+- 콤포넌트: 객체(Object)
+- 액티비티(Activity): 화면, 진입 액티비티가 존재.
+- 현재 앱의 규모를 확인할때, AndroidManifest.xml을 사용.
+- intent: 인텐트(편지봉투)는 액티비티에 무언가를 전달할때 사용하는 편지봉투의 역할.
+- Listener(리스너): Listen은 듣다. 
+- 리스너는 이벤트에 대한 대기 상태를 말합니다.
+- OnClick리스너{}는 클릭 이벤트가 발생시 {자동실행}되는 구조.
+- ---------------------------------------------------
+- 렌더링: xml코드(자바에서생성)를 화면에 출력하는과정을 렌더링이라고 말함.
+
+#### 20210309(화) 작업.
+- 사용자단(관리자단) 페이징 처리 확인(글10개이상입력필요)OK.
+- 수정할 부분(아래 코드를 list_board.jsp 상단에 넣으면 됩니다.)
+
+```
+아래 자바스크립트 추가필요
+<script>
+function fn_egov_select_noticeList(pageNo) {
+    document.search_form.pageIndex.value = pageNo;
+    document.search_form.submit();  
+}
+</script>
+디자인 깨지는 것은 PaginationRenderer 클래스의 paganum CSS클래스명이 잘못 들어가 있어서 깨짐, 수정필요
+```
+- AVD에 헬로원월드앱 1개 생성해서 배포OK.
+- 안드로이드앱은 액티비티(xml화면)-프로그램(java파일) 1개쌍으로 구성됨
+- 앱에서 사용하는 크기(단위): 웹px(pixel)로통일(확대시깨짐),
+- 앱에서는 dp(density pixel-밀도픽셀)로통일(확대시 안깨짐), sp(scale pixel-확장가능픽셀,문자전용크기)
+- 3교시 과제물확인 후 -4교시 요구사항확인 과제물제출OK.
+- 겔럭시AVD에서 한글않보이는 문제 처리 후 진도진행OK.
+- AVD한글은 현재 롤리팝5.1이상부터 지원하기 때문에 진행OK.
+- 현재 젤리빈AVD지우고, 롤리팝AVD로 다시 생성하고 테스트 합니다OK.
+- -------------------------------------------------
+- 교재목차(열혈자바프로그래밍, 자바웹을 다루는기술, 혼자공부하는 C언어)확인
+- 모델2방식=MVC프로젝트방식
+- 기본자료형(int, boolean, double), 
+- Object > 참조(클래스)자료형(Integer, String, 사용자클래스-MemberVO...)
+- Map<String,Object> mapData = new HashMap<String,Object>();
+- Integer abc; -> (String) abc; abc.toString();
+- 자바버전8이상부터 제네릭타입이 지원시작: List<Object[String|Integer|MemberVO]제네릭타입형> obj = 설렉트쿼리;
+- 상수<->변수
+- 애노테이션(@,Annotation): 지시자(명시자) 클래스지정
+- Math클래스의 메서드를 이용해서 난수-중복아이디방지 -> UUID클래스를 이용해서 지구에서 단1개인 ID값을 생성
+- 람다식(자바8이상부터지원시작): 주기능은 생략하고, 코딩해라.
+- 스트림: 네트워크용어(업로드,다운로드,앱<->웹 자료전송 기능)
+- java.io.~Stream클래스사용
+- 1개의 웹프로그램은 1개의 쓰레드로 작동됨. 이유는 웹브라우저작동의 기본이기 때문에...
+- 다중 쓰레드가 사용되는 곳은 비동기 통신(안드로이드앱 웹과 통신시)에서 주료 사용됩니다.
+- for(){for(){변수1생성-스코프scope영역}; 변수1X}; ->자료형과비교시 레코드(1차원)를 -> 표(2차원)로 출력할때
+- 오버로딩 public void member_insert(String a) { }
+- 오버로딩 public void member_insert(String a, String b) { }
+- 1차원배열: MemberVO memberVO = new MemberVO();
+- 2차원배열: List<MemberVO> memberList = null;
+- 11번과목 애플리케이션 설계과목 진도나감(과제물내용부터살펴봄).
+- 안드로이드 스튜디오4.1.2최신버전 학습-PPT슬라이드교재사용.
+
+#### 20210308(월) 작업.
+- 콘텐츠.replaceAll("정규식패턴",""); 해석: 콘텐츠내에 정규식패턴에 필터링되는 문자열을 "" 삭제시켜라 명령
+- 점심 이후 사용자단(관리자단) 페이징 처리 결과 확인예정.
+- 안드로이드스튜디오 AVD 애뮬 1개추가OK.-여기까지
+- 헬로앱 1개 생성. 애뮬레이터로 실행예정
+- egov프로젝트 메인페이지 출력물 시큐어코딩처리_egov기존save로직에 포함되었기 때문에 시큐어코딩처리 필요X.
+- 겔러리게시판 이미지 미리보기 기능추가OK.
+- 공지사항게시판 출력jsp생성예정.
+- 안드로이드PPT자료 학습진행 예정.
+
+#### 20210305(금) 작업.
+- 프로그래밍은 디버그-문제해결하는 부분이 주작업.
+- 개발할때는 프론트가 되었던, 백엔드, C, 자바, 스프링이든 디버그환경을 신경써야 합니다.
+- 수업전: egov프로젝트 에러표시 타일즈 템플릿 렌더링(화면출력)때문에 문제점이 않보입니다.
+- web.xml에서 error-page 설정을 주석처리OK.
+- egov 게시판 CRUD 중 CUD(타일즈적용) -> 홈컨트롤러 기존 관리자단 egov서비스이용해서 작업OK.
+- 안드로이드 스튜디오4.x 설치 후 기본학습 -> 스프링프로젝트와 통신에 사용.
+- 사용자단 디자인으로 메인작업(게시판내용 미리보기출력)예정.
+- C언어처음, printf("hello c!");
+- 자바언어처음, System.out.println("hello world!");
+- 스프링처음: 스프링MVC프로젝트 최초생성 Hello월드 시간출력(한글시간깨짐)
+- 안드로이드앱 처음 Blank앱(공백앱)을 생성시 Hello world 출력(안드로이드폰에 출력)
+- 인텔리J(안드로드이ST,그레이들 빌드, build.gradle) = 이클립스(egov-IDE,메이븐 빌드,pom.xml)
+- 앱프로젝트생성시 선택(자바.java, 코틀린.kt): 자바선택
+- SDK(소프트웨어 개발 키트-외부라이브러리): 메이븐의 레포지토리폴더와 유사
+- 안드로드이스튜디오 빌드->PC와USB로 연결된 스마트폰으로 실행결과확인 대신.
+- 앱 결과물을 출력할 PC애뮬레이터 설치 후 애뮬을 이용해서 실행결과확인.
+- 안드로이등가상기기: AVD(안드로이드 버추어 디바이스=애뮬레이터)
+- 실제 폰이 없이, 앱구동이 가능.
+- 신교재 2권 받으시면,목차 중에서 우리프로젝트진행상황과 매칭되는 부분 체크예정
+
+#### 20210304(목) 작업.
+- 페이징처리: list_board.jsp가 실행될때 -> ui:pagination의 type='paging' 타입이 호출 
+- -> context-common.xml 의 paginationManager(빈)이 실행 -> rendererType이 paging인 pageRenderer(빈)이 실행
+- jsp 의 EL(Express Language)표기법 사용해서 변수 출력.
 - 이중for문은: 출력시 2차원배열(표)를 출력합니다.
 - 단일for문은: 1차원배열
+- 구름IDE C언어 기본학습 구구단 설명OK. -> IoT에서 사용.
+- 주로 사용하는 jsp템플릿 종류:타일즈,벨로서티,타임리프,사이트메시
 - egov 게시판 CRUD 디자인부터 jsp변경(타일즈적용) -> 홈컨트롤러 기존egov서비스이용해서 화면CRUD 작업예정.
 - 사용자단 디자인으로 메인작업(게시판내용 미리보기출력)예정.
-- 구름IDE C언어 기본학습 구구단 설명예정 -> IoT에서 사용.
 - 안드로이드 스튜디오4.x 설치 후 기본학습 -> 스프링프로젝트와 통신에 사용.
 - 신교재 2권 받으시면,목차 중에서 우리프로젝트진행상황과 매칭되는 부분 체크예정
 
