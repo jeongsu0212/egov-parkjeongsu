@@ -125,6 +125,13 @@ if("${msg}"!="") { //RedirectAttributes 로 컨트롤러에서 보내온 값을 
                 </a>
               </li>
               <li class="nav-item">
+                <a href="<c:url value='/admin/authorrole/list_author.do' />" class="nav-link">
+                <!-- 메뉴선택시 활성화(active)되는것은 j쿼리로 만들예정(위) -->
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>권한 관리</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="<c:url value='/' />admin/board/list_board.do?bbsId=BBSMSTR_AAAAAAAAAAAA" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>공지사항 관리</p>
