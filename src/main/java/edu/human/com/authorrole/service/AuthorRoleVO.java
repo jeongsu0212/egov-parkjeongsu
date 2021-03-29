@@ -1,6 +1,10 @@
 package edu.human.com.authorrole.service;
-
-public class AuthorrRoleVO {
+/**
+ * AuthorRoleVO 클래스는 jsp,DAO에서사용하는 임시저장 Get/Set역할
+ * @author 박정수
+ *
+ */
+public class AuthorRoleVO {
 	private int AUTHORROLE_ID;
 	private String ROLE_PTTRN;
 	private String AUTHOR_CODE;
@@ -8,10 +12,9 @@ public class AuthorrRoleVO {
 	private Integer SORT_ORDR;
 	private String USE_AT;
 	
-	
 	@Override
 	public String toString() {
-		return "AuthorrRoleVO [AUTHORROLE_ID=" + AUTHORROLE_ID + ", ROLE_PTTRN=" + ROLE_PTTRN + ", AUTHOR_CODE="
+		return "AuthorRoleVO [AUTHORROLE_ID=" + AUTHORROLE_ID + ", ROLE_PTTRN=" + ROLE_PTTRN + ", AUTHOR_CODE="
 				+ AUTHOR_CODE + ", AUTHORROLE_DC=" + AUTHORROLE_DC + ", SORT_ORDR=" + SORT_ORDR + ", USE_AT=" + USE_AT
 				+ "]";
 	}
